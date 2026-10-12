@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS players (username VARCHAR(255) PRIMARY KEY, full_name VARCHAR(255), mail VARCHAR(255));
