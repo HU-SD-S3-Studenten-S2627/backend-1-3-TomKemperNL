@@ -40,7 +40,7 @@ public class PlayerDAO {
     public void insertPlayer(Player player) {
         try (Connection con = dataSource.getConnection()) {
             PreparedStatement ps = con.prepareStatement("INSERT INTO players VALUES (?, ?, ?)");
-            ps.setString(1, player.getUsername());
+            ps.setString(1, player.getLogin());
             ps.setString(2, player.getFullName());
             ps.setString(3, player.getEmailAddress());
             ps.execute();
@@ -64,7 +64,7 @@ public class PlayerDAO {
     public void deletePlayer(Player found) {
         try (Connection con = dataSource.getConnection()) {
             PreparedStatement ps = con.prepareStatement("DELETE FROM players WHERE username = ?");
-            ps.setString(1, found.getUsername());
+            ps.setString(1, found.getLogin());
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

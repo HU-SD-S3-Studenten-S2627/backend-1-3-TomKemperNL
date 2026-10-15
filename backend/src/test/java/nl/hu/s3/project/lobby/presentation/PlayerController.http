@@ -1,6 +1,10 @@
 GET http://localhost:8080/players
 
 ###
+GET http://localhost:8080/players/alternatief
+
+
+###
 
 GET http://localhost:8080/players/player3
 

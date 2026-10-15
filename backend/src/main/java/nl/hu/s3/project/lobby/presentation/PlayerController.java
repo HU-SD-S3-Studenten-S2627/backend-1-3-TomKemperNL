@@ -5,10 +5,9 @@ import nl.hu.s3.project.lobby.domain.Player;
 import nl.hu.s3.project.lobby.presentation.dto.PlayerDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,10 +23,16 @@ public class PlayerController {
 
     @GetMapping
     public List<PlayerDTO> getPlayers() {
-        for (Player player : dao.selectPlayers()) {
-            logger.debug("Found player: {}", player);
+        List<PlayerDTO> output = new ArrayList<>();
+        List<Player> players = dao.selectPlayers();
+        for(Player player : players){
+            output.add(new PlayerDTO(player.getLogin(), player.getFullName(), player.getEmailAddress()));
         }
-        //TODO: Return nette DTOs van de spelers, in plaats van... whatever dit is
-        throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Not implemented yet");
+        return output;
+    }
+
+    @GetMapping("/alternatief")
+    public List<Player> getPlayers2() {
+        return dao.selectPlayers();
     }
 }
