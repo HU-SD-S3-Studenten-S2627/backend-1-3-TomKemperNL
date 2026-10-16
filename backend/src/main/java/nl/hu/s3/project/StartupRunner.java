@@ -18,6 +18,9 @@ public class StartupRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if(playerDAO.selectPlayers().isEmpty()){
             playerDAO.insertPlayer(new Player("freezeybob", "Bob De Vries", "bob@example.com"));
+            playerDAO.insertPlayer(new Player("BobChunker", "Bob de Groot", "bobber-2009@example.com"));
+            playerDAO.insertPlayer(new Player("AliceDeVries", "Alice de Vries", "alice@example.com"));
+            playerDAO.insertPlayer(new Player("bubbahotep", "Bubba Hotep", "swingingmummy@example.com"));
         }
     }
 }

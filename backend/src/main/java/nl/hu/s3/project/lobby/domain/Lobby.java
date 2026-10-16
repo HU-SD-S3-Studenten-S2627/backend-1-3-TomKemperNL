@@ -17,7 +17,7 @@ public class Lobby {
         this.host = host;
         this.minPlayers = game.minPlayers();
         this.maxPlayers = game.maxPlayers();
-        this.state = GameState.InLobby;
+        this.state = GameState.IN_LOBBY;
         this.players = new ArrayList<>();
         this.players.add(this.host);
     }
@@ -41,13 +41,13 @@ public class Lobby {
     }
 
     public void start() {
-        if (this.state != GameState.InLobby) {
+        if (this.state != GameState.IN_LOBBY) {
             throw new RuntimeException("Cannot start, game already " + this.state);
         }
         if (!this.enoughPlayers()) {
             throw new RuntimeException(String.format("Not enough players, need %s-%s, got %s", this.minPlayers, this.maxPlayers, this.players.size()));
         }
-        this.state = GameState.Started;
+        this.state = GameState.STARTED;
     }
 
     public GameState getState() {
@@ -68,5 +68,20 @@ public class Lobby {
 
     public AvailableGame getGame() {
         return game;
+    }
+
+    public Player getHost() {
+        return this.host;
+    }
+
+    public void updateHost(Player newHost) {
+        this.host = newHost;
+        if(!this.players.contains(newHost)) {
+            this.players.add(newHost);
+        }
+    }
+
+    public void updateGame(AvailableGame newGame) {
+        this.game = newGame;
     }
 }

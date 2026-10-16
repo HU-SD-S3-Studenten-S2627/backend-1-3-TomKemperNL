@@ -6,7 +6,37 @@ Content-Type: application/json
 
 {
   "game": "BLACKJACK",
-  "host": {
-    "username": "test"
-  }
+  "host": "freezeybob"
 }
+
+###
+GET http://localhost:8080/lobbies/0
+
+###
+
+PUT http://localhost:8080/lobbies/0
+Content-Type: application/json
+
+{
+  "game": "UNO",
+  "host": "freezeybob"
+}
+
+###
+
+DELETE http://localhost:8080/lobbies/0
+
+###
+
+GET http://localhost:8080/lobbies/0/players
+
+###
+
+POST http://localhost:8080/lobbies/0/players
+Content-Type: text/plain
+
+BobChunker
+
+###
+
+DELETE http://localhost:8080/lobbies/0/players/BobChunker

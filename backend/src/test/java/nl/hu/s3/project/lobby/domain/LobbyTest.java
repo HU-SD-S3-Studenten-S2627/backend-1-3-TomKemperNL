@@ -8,7 +8,7 @@ public class LobbyTest {
 
     @Test
     public void cantStartWithTooFewPlayers(){
-        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.Uno);
+        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.UNO);
         assertThrows(RuntimeException.class, () -> {
            lobby.start();
         });
@@ -16,8 +16,8 @@ public class LobbyTest {
 
     @Test
     public void cantJoinWithTooManyPlayers(){
-        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.Uno);
-        for(int i=0; i< AvailableGame.Uno.maxPlayers() - 1; i++){
+        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.UNO);
+        for(int i = 0; i< AvailableGame.UNO.maxPlayers() - 1; i++){
             lobby.join(new Player("P" + i+1));
         }
         assertThrows(RuntimeException.class, () -> {
@@ -27,7 +27,7 @@ public class LobbyTest {
 
     @Test
     public void cantDoubleJoin(){
-        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.Uno);
+        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.UNO);
 
         lobby.join(new Player("P1"));
 
@@ -38,12 +38,12 @@ public class LobbyTest {
 
     @Test
     public void canStartWithEnough(){
-        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.Uno);
+        Lobby lobby = new Lobby(new Player("Host"), AvailableGame.UNO);
         lobby.join(new Player("P1"));
         lobby.join(new Player("P2"));
         lobby.join(new Player("P3"));
         lobby.start();
-        assertEquals(GameState.Started, lobby.getState());
+        assertEquals(GameState.STARTED, lobby.getState());
 
     }
 
