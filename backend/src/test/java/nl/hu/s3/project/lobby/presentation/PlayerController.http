@@ -11,7 +11,18 @@ Content-Type: application/json
 
 {
   "username": "player3",
-  "name": "Pierre Jojo",
+  "fullName": "Pierre Jojo",
+  "email": "pierre@example.com"
+}
+
+###
+
+
+PUT localhost:8080/players/player3
+Content-Type: application/json
+
+{
+  "fullName": "Pierre Joeur",
   "email": "pierre@example.com"
 }
 
