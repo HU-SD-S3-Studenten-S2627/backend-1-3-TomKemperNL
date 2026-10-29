@@ -1,0 +1,22 @@
+POST http://localhost:8080/questions
+Content-Type: application/json
+
+{
+  "label": "Hoe gaat het?"
+}
+
+###
+
+GET http://localhost:8080/questions/1
+
+
+###
+
+GET http://localhost:8080/questions
+###
+PUT http://localhost:8080/questions/1
+Content-Type: application/json
+
+{
+  "label": "Hoe gaat het ernee?"
+}

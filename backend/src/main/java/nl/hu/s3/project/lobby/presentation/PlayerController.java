@@ -5,7 +5,6 @@ import nl.hu.s3.project.lobby.domain.Player;
 import nl.hu.s3.project.lobby.presentation.dto.PlayerDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -23,10 +22,7 @@ public class PlayerController {
     }
 
     @GetMapping
-    public List<PlayerDTO> getPlayers(Authentication currentUser) {
-        System.out.println("De ingelogde user is: " + currentUser.getName());
-        System.out.println("En hij heeft last van " +
-                ((DisabilityDetails)currentUser.getDetails()).getDetails());
+    public List<PlayerDTO> getPlayers() {
 
         List<PlayerDTO> output = new ArrayList<>();
         List<Player> players = dao.selectPlayers();
