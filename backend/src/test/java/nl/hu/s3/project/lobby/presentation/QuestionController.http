@@ -2,7 +2,8 @@ POST http://localhost:8080/questions
 Content-Type: application/json
 
 {
-  "label": "Hoe gaat het?"
+  "label": "Hoe gaat het?",
+  "answers": ["Goed", "Slecht"]
 }
 
 ###
@@ -18,5 +19,6 @@ PUT http://localhost:8080/questions/1
 Content-Type: application/json
 
 {
-  "label": "Hoe gaat het ernee?"
+  "label": "Hoe gaat het ernee?",
+  "answers": ["Goed", "Matig","Slecht"]
 }

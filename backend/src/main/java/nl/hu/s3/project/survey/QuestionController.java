@@ -33,6 +33,11 @@ public class QuestionController {
     @PostMapping
     public Question newQuestion(@RequestBody NewQuestionRequest dto){
         Question q = new Question(dto.label());
+        for(String answer: dto.answers()){
+            Answer newAnswer = new Answer(answer);
+//            entities.persist(newAnswer);
+            q.getAnswers().add(newAnswer);
+        }
         entities.persist(q);
         return q;
     }
@@ -40,6 +45,12 @@ public class QuestionController {
     @PutMapping("/{id}")
     public Question updateQuestion(@PathVariable  Long id, @RequestBody NewQuestionRequest dto){
         Question q = this.entities.find(Question.class, id);
+        q.getAnswers().clear();
+        for(String answer: dto.answers()){
+            Answer newAnswer = new Answer(answer);
+//            entities.persist(newAnswer);
+            q.getAnswers().add(newAnswer);
+        }
         q.setLabel(dto.label());
         return q;
     }

@@ -1,9 +1,9 @@
 package nl.hu.s3.project.survey;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Question {
@@ -20,6 +20,10 @@ public class Question {
     @GeneratedValue
     private Long id;
 
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Answer> answers = new ArrayList<>();
+
     @Column(name = "questionLabel")
     private String label;
 
@@ -33,5 +37,9 @@ public class Question {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
     }
 }
