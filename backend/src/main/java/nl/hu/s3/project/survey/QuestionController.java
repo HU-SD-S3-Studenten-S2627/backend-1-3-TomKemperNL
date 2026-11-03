@@ -48,7 +48,6 @@ public class QuestionController {
         q.getAnswers().clear();
         for(String answer: dto.answers()){
             Answer newAnswer = new Answer(answer);
-//            entities.persist(newAnswer);
             q.getAnswers().add(newAnswer);
         }
         q.setLabel(dto.label());
