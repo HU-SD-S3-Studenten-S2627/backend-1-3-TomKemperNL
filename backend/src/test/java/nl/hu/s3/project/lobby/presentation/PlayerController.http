@@ -35,11 +35,13 @@ Authorization: Bearer {{jwt}}
 
 ###
 GET http://localhost:8080/players/player3
+Authorization: Bearer {{jwt}}
 
 ###
 
 POST localhost:8080/players
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
   "username": "player3",
@@ -52,6 +54,7 @@ Content-Type: application/json
 
 PUT localhost:8080/players/player3
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
   "name": "Pierre Joeur",

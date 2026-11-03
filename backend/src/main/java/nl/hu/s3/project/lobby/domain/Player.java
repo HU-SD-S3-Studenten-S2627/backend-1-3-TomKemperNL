@@ -1,10 +1,18 @@
 package nl.hu.s3.project.lobby.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 
+@Entity
 public class Player {
+    @Id
     private String username;
+    @Column(name = "full_name")
     private String fullName;
+    @Column(name = "mail")
     private String emailAddress;
 
     protected Player(){}

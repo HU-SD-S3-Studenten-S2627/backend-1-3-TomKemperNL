@@ -1,16 +1,30 @@
 package nl.hu.s3.project.lobby.domain;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Entity
 public class Lobby {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private int minPlayers;
     private int maxPlayers;
+    @ManyToOne
     private Player host;
+    @ManyToMany
     private List<Player> players;
+    @Enumerated(EnumType.STRING)
     private GameState state;
+    @Enumerated(EnumType.STRING)
     private AvailableGame game;
+
+    protected Lobby(){}
 
     public Lobby(Player host, AvailableGame game) {
         this.game = game;
@@ -83,5 +97,9 @@ public class Lobby {
 
     public void updateGame(AvailableGame newGame) {
         this.game = newGame;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

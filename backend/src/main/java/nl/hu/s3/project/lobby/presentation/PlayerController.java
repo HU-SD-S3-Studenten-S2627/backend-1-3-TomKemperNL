@@ -2,14 +2,14 @@ package nl.hu.s3.project.lobby.presentation;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import nl.hu.s3.project.lobby.data.PlayerDAO;
+import nl.hu.s3.project.lobby.data.PlayerRepository;
 import nl.hu.s3.project.lobby.domain.Player;
 import nl.hu.s3.project.lobby.presentation.dto.LoginRequest;
 import nl.hu.s3.project.lobby.presentation.dto.LoginResponse;
 import nl.hu.s3.project.lobby.presentation.dto.PlayerDTO;
 import nl.hu.s3.project.lobby.presentation.dto.UpdatePlayerDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +24,14 @@ import java.util.List;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static nl.hu.s3.project.SecurityConfig.SECRET;
 
+@Transactional
 @RestController
 @RequestMapping("/players")
 public class PlayerController {
 
-    private final PlayerDAO dao;
+    private final PlayerRepository dao;
 
-    public PlayerController(PlayerDAO playerDAO) {
+    public PlayerController(PlayerRepository playerDAO) {
         this.dao = playerDAO;
     }
 
@@ -46,7 +47,7 @@ public class PlayerController {
     @PostMapping
     public ResponseEntity<PlayerDTO> addPlayer(@RequestBody PlayerDTO newPlayer) {
         newPlayer.validate();
-        this.dao.insertPlayer(new Player(newPlayer.username(), newPlayer.name(), newPlayer.email()));
+        this.dao.addPlayer(new Player(newPlayer.username(), newPlayer.name(), newPlayer.email()));
         return ResponseEntity.created(URI.create("/players/" + newPlayer.username())).body(newPlayer);
     }
 
@@ -78,7 +79,7 @@ public class PlayerController {
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        dao.deletePlayer(found);
+        dao.removePlayer(found);
     }
 
     @PostMapping("/login")
