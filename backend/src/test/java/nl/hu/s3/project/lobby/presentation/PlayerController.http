@@ -1,7 +1,39 @@
+POST http://localhost:8080/players/login
+Content-Type: application/json
+
+{
+  "username": "AliceDeVries",
+  "password": "AliceDeVriespwd"
+}
+> {%
+    const json = response.body;
+    client.global.set("jwt", json.token);
+%}
+
+###
+
+POST http://localhost:8080/players/login
+Content-Type: application/json
+
+{
+  "username": "freezeybob",
+  "password": "freezeybobpwd"
+}
+> {%
+    const json = response.body;
+    client.global.set("jwt", json.token);
+%}
+
+###
+
 GET http://localhost:8080/players
 
 ###
 
+GET http://localhost:8080/players
+Authorization: Bearer {{jwt}}
+
+###
 GET http://localhost:8080/players/player3
 
 ###
@@ -29,3 +61,5 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/players/player3
+
+###

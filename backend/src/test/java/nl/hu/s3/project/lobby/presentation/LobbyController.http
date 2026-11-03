@@ -1,42 +1,79 @@
+POST http://localhost:8080/players/login
+Content-Type: application/json
+
+{
+  "username": "AliceDeVries",
+  "password": "AliceDeVriespwd"
+}
+> {%
+    const json = response.body;
+    client.global.set("jwt", json.token);
+%}
+
+###
+
+POST http://localhost:8080/players/login
+Content-Type: application/json
+
+{
+  "username": "freezeybob",
+  "password": "freezeybobpwd"
+}
+> {%
+    const json = response.body;
+    client.global.set("jwt", json.token);
+%}
+
+###
+
 GET http://localhost:8080/lobbies
+Authorization: Bearer {{jwt}}
 
 ###
 POST localhost:8080/lobbies
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
-  "game": "BLACKJACK",
-  "host": "freezeybob"
+  "game": "BLACKJACK"
 }
 
 ###
 GET http://localhost:8080/lobbies/0
+Authorization: Bearer {{jwt}}
 
 ###
 
 PUT http://localhost:8080/lobbies/0
+Authorization: Bearer {{jwt}}
 Content-Type: application/json
 
 {
-  "game": "UNO",
-  "host": "freezeybob"
+  "game": "UNO"
 }
 
 ###
 
 DELETE http://localhost:8080/lobbies/0
+Authorization: Bearer {{jwt}}
 
 ###
 
 GET http://localhost:8080/lobbies/0/players
+Authorization: Bearer {{jwt}}
 
 ###
 
 POST http://localhost:8080/lobbies/0/players
-Content-Type: text/plain
-
-BobChunker
+Authorization: Bearer {{jwt}}
 
 ###
 
 DELETE http://localhost:8080/lobbies/0/players/BobChunker
+Authorization: Bearer {{jwt}}
+
+
+###
+
+DELETE http://localhost:8080/lobbies/0/players/AliceDeVries
+Authorization: Bearer {{jwt}}

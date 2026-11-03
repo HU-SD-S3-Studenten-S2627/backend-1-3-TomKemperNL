@@ -9,6 +9,7 @@ import nl.hu.s3.project.lobby.presentation.dto.NewLobbyDTO;
 import nl.hu.s3.project.lobby.presentation.dto.PlayerDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -47,8 +48,9 @@ public class LobbyController {
     }
 
     @PostMapping
-    public ResponseEntity<LobbyDTO> createLobby(@RequestBody NewLobbyDTO dto) {
-        Player found = this.players.selectPlayer(dto.host());
+    public ResponseEntity<LobbyDTO> createLobby(Authentication auth, @RequestBody NewLobbyDTO dto) {
+        String currentUser = auth.getName();
+        Player found = this.players.selectPlayer(currentUser);
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Host not found");
         }
@@ -64,8 +66,14 @@ public class LobbyController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeLobby(@PathVariable int id) {
+    public void removeLobby(Authentication auth, @PathVariable int id) {
         try{
+            String currentUser = auth.getName();
+            Lobby found = this.lobbies.get(id);
+            if(!found.getHost().getUsername().equals(currentUser)){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own lobbies");
+            }
+
             this.lobbies.remove(id);
         }catch(IndexOutOfBoundsException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby not found");
@@ -73,15 +81,12 @@ public class LobbyController {
     }
 
     @PutMapping("/{id}")
-    public LobbyDTO updateLobby(@PathVariable int id, @RequestBody NewLobbyDTO dto) {
+    public LobbyDTO updateLobby(Authentication auth, @PathVariable int id, @RequestBody NewLobbyDTO dto) {
+        String currentUser = auth.getName();
         try{
             Lobby foundLobby = this.lobbies.get(id);
-            if(dto.host() != null){
-                Player found = this.players.selectPlayer(dto.host());
-                if (found == null) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Host not found");
-                }
-                foundLobby.updateHost(found);
+            if(!foundLobby.getHost().getUsername().equals(currentUser)){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own lobbies");
             }
             if(dto.game() != null){
                 AvailableGame game = AvailableGame.valueOf(dto.game());
@@ -108,10 +113,11 @@ public class LobbyController {
     }
 
     @PostMapping("/{id}/players")
-    public ResponseEntity<String> join(@PathVariable int id, @RequestBody String newPlayer) {
+    public ResponseEntity<String> join(Authentication auth, @PathVariable int id) {
         try{
+            String currentUser = auth.getName();
             Lobby found = this.lobbies.get(id);
-            Player foundPlayer = this.players.selectPlayer(newPlayer);
+            Player foundPlayer = this.players.selectPlayer(currentUser);
             if (foundPlayer == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player not found");
             }
@@ -128,8 +134,13 @@ public class LobbyController {
     }
 
     @GetMapping("/{id}/players/{name}")
-    public PlayerDTO getPlayer(@PathVariable int id, @PathVariable String name) {
+    public PlayerDTO getPlayer(Authentication auth, @PathVariable int id, @PathVariable String name) {
         try{
+            String currentUser = auth.getName();
+            if(!currentUser.equals(name)){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can ask details about yourself");
+            }
+
             Lobby found = this.lobbies.get(id);
             Player foundPlayer = null;
             for(Player p : found.getPlayers()){
@@ -147,8 +158,12 @@ public class LobbyController {
     }
 
     @DeleteMapping("/{id}/players/{name}")
-    public void leave(@PathVariable int id, @PathVariable String name) {
+    public void leave(Authentication auth, @PathVariable int id, @PathVariable String name) {
         try{
+            String currentUser = auth.getName();
+            if(!currentUser.equals(name)){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only leave yourself");
+            }
             Lobby found = this.lobbies.get(id);
             Player foundPlayer = null;
             for(Player p : found.getPlayers()){

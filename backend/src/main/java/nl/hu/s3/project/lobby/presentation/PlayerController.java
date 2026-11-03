@@ -1,7 +1,11 @@
 package nl.hu.s3.project.lobby.presentation;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import nl.hu.s3.project.lobby.data.PlayerDAO;
 import nl.hu.s3.project.lobby.domain.Player;
+import nl.hu.s3.project.lobby.presentation.dto.LoginRequest;
+import nl.hu.s3.project.lobby.presentation.dto.LoginResponse;
 import nl.hu.s3.project.lobby.presentation.dto.PlayerDTO;
 import nl.hu.s3.project.lobby.presentation.dto.UpdatePlayerDTO;
 import org.slf4j.Logger;
@@ -12,8 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
+import static nl.hu.s3.project.SecurityConfig.SECRET;
 
 @RestController
 @RequestMapping("/players")
@@ -70,5 +79,28 @@ public class PlayerController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         dao.deletePlayer(found);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest req){
+        Player found = this.dao.selectPlayer(req.username());
+        if (found == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        if(!req.password().equals(req.username() + "pwd")){ //Hier zou je normaal echt het wachtwoord checken
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        var builder = Jwts.builder()
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), Jwts.SIG.HS512)
+                .issuer("HU-SD-S3")
+                .expiration(Date.from(Instant.now().plus(1, DAYS)))
+                .subject(found.getUsername());
+
+        if(found.getUsername().equals("AliceDeVries")){ //En hier kun je iets complexers doen om een rol te bepalen...
+            builder = builder.claim("role", "ADMIN");
+        }
+
+        return new LoginResponse(builder.compact());
     }
 }
